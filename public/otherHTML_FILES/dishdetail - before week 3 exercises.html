@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="confusionApp">
+
+<head>
+     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head
+         content must come *after* these tags -->
+    <title>Ristorante Con Fusion: Menu</title>
+        <!-- Bootstrap -->
+<!-- build:css styles/main.css -->
+    <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="styles/bootstrap-social.css" rel="stylesheet">
+    <link href="styles/mystyles.css" rel="stylesheet">
+<!-- endbuild -->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row row-content"  ng-controller="DishDetailController"> 
+              <div class="col-xs-12">
+               <!-- <p>Put the dish details here</p>-->
+                <div class="media" >
+                    <div class="media-left media-middle">
+                        <a href="#">
+                        <img class="media-object img-thumbnail"
+                         ng-src={{dish.image}} alt="Uthappizza">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h2 class="media-heading">{{dish.name}}
+                         <span class="label label-danger">{{dish.label}}</span>
+                         <span class="badge">{{dish.price | currency}}</span></h2>
+                         <p>{{dish.description}}</p>                      
+                    </div>
+                </div>
+            </div>
+          
+            <div class="col-sm-offset-1 col-sm-12">
+                    <div class="col-sm-3">    
+                        <h4><strong>Customer Comments</strong> </h4>
+                    </div>
+                    <div class="col-sm-3"> 
+                        <p>Sort by: <input type="text"  ng-model="orderingText" ></p>
+                    </div>
+            </div>
+            
+                         
+            <div class="col-xs-9 col-xs-offset-1">
+<!--                <p>Put the comments here</p>-->                   
+                   
+                     <div ng-repeat="com in dish.comments |orderBy:orderingText ">
+                         <div>
+                            <blockquote>
+<!--                                <p>{{com.rating}} Stars</p>-->
+                                 <h4><strong>{{printStar(com.rating)}}</strong></h4>
+                                <p>{{com.comment}}</p>
+                                <footer>{{com.author}}
+                                  <cite>{{com.date | date}}</cite>
+                                </footer>
+                            </blockquote>
+                        </div>
+                    </div>
+            </div>
+            
+            <div class="col-xs-9 col-xs-offset-1" ng-controller="DishCommentController">
+                    <ul class="list-unstyled">
+						<!--<p>Task 3: Here you include the code to show the live preview of the comment</p>
+						<p>The comment should be shown only when the form contains valid
+						information and is not pristine</p>-->
+                        <div ng-show="!commentForm.$pristine && !commentForm.$invalid ">
+                                <blockquote>
+                                   <h4><strong>{{printStar(comt.rating)}}</strong></h4>
+                                    <p>{{comt.comment}}</p>
+                                    <footer>{{comt.author}}
+                                        <cite>{{Date.now() | date}}</cite>
+                                    </footer>
+                                </blockquote>  
+                        </div>
+                    </ul>
+                <form class="form-horizontal" name="commentForm"
+                		ng-submit="submitComment()" novalidate>
+					<!--<p>Task 1: Design the form to submit the comments</p>
+					<p>Task 2: You need to validate that the user name and comments are entered</p>-->
+                    
+                     <div class="form-group" 
+                          ng-class="{ 'has-error' : commentForm.authorName.$error.required &&                                                           !commentForm.authorName.$pristine }">
+                        <label for="author" class="col-sm-2 control-label">Your Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" 
+                                    name="authorName" id="authorName"
+                                    placeholder="Enter your Name"
+                            ng-model="comt.author" required>
+                            <span ng-show="commentForm.authorName.$error.required &&                                                                                  !commentForm.authorName.$pristine" 
+                                class="help-block">Your name is required. </span>                      
+                        </div>
+                    </div>
+                    
+                   <div class="form-group">
+						<label for="rating" 
+                               class="col-sm-2 control-label">
+                            No. of Stars </label>
+						<div class="col-sm-10">
+							<label class="radio-inline">
+                                <input ng-model="comt.rating" 
+                                       type="radio" id = "1" name="rating" value="1"/>1</label>
+							<label class="radio-inline">
+                                <input ng-model="comt.rating" 
+                                       type="radio" id = "2" name="rating"  value="2"/>2</label>
+                            <label class="radio-inline">
+                                <input ng-model="comt.rating" 
+                                       type="radio" id = "3" name="rating"  value="3"/>3</label>
+                            <label class="radio-inline">
+                                <input ng-model="comt.rating" 
+                                       type="radio" id = "4" name="rating"  value="4"/>4</label>
+                            <label class="radio-inline">
+                                <input ng-model="comt.rating" 
+                                       type="radio" id = "5" name="rating"  value="5" checked="checked"  />5</label>      
+						</div>	
+                      </div>
+                    
+                    
+                    <div class="form-group" 
+                          ng-class="{ 'has-error' : commentForm.comment.$error.required &&                                                           !commentForm.comment.$pristine }">
+                        <label for="comment" class="col-sm-2 control-label">Your Comments</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="12"
+                                name="comment" id="comment"
+                                ng-model="comt.comment" required>
+                            </textarea>
+                             <span ng-show="commentForm.comment.$error.required &&                                                                                  !commentForm.comment.$pristine" 
+                                class="help-block">Your comments are required. </span>
+                        </div>
+                    </div> 
+                    
+                    
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">                            
+                             <button type="submit" 
+                                     class="btn btn-primary" 
+                                     ng-disabled="commentForm.$invalid">Submit Comment
+                            </button>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!-- build:js scripts/main.js -->
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="scripts/app.js"></script>
+<!-- endbuild -->
+
+</body>
+
+</html>
